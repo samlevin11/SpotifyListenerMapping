@@ -5,7 +5,8 @@ const querystring = require('querystring');
 const { generateRandomString } = require('./helpers');
 const app = express();
 const port = 3000;
-``;
+
+app.set('view engine', 'ejs');
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
@@ -61,8 +62,7 @@ app.get('/callback', (req, res) => {
                     access_token,
                     refresh_token,
                 });
-
-                res.redirect(`/?${queryParams}`);
+                res.redirect(`/map?${queryParams}`);
             } else {
                 res.redirect(
                     `/?${querystring.stringify({ error: 'invalid_token' })}`
@@ -100,7 +100,9 @@ app.get('/refresh_token', (req, res) => {
 });
 
 app.get('/map', (req, res) => {
-    res.send('MAP');
+    console.log('ACCESS TOKEN: ' + req.query.access_token);
+    // res.serv('MAP');
+    res.render('map');
 });
 
 function logger(req, res, next) {
