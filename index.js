@@ -11,13 +11,13 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
+const stateKey = 'spotify_auth_state';
+
 app.use(logger);
 
 app.get('/', (req, res) => {
     res.send('root');
 });
-
-const stateKey = 'spotify_auth_state';
 
 app.get('/login', (req, res) => {
     const state = generateRandomString(16);
@@ -55,9 +55,26 @@ app.get('/callback', (req, res) => {
     })
         .then((response) => {
             if (response.status === 200) {
-                res.send(
-                    `<pre>${JSON.stringify(response.data, null, 2)}</pre>`
-                );
+                const { access_token, token_type } = response.data;
+
+                axios
+                    .get('https://api.spotify.com/v1/me', {
+                        headers: {
+                            Authorization: `${token_type} ${access_token}`,
+                        },
+                    })
+                    .then((response) => {
+                        res.send(
+                            `<pre>${JSON.stringify(
+                                response.data,
+                                null,
+                                2
+                            )}</pre>`
+                        );
+                    })
+                    .catch((error) => {
+                        res.send(error);
+                    });
             } else {
                 res.send(response);
             }
