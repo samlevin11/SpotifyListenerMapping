@@ -62,7 +62,7 @@ app.get('/callback', (req, res) => {
                     access_token,
                     refresh_token,
                 });
-                res.redirect(`/map?${queryParams}`);
+                res.redirect(`/spotify?${queryParams}`);
             } else {
                 res.redirect(
                     `/?${querystring.stringify({ error: 'invalid_token' })}`
@@ -100,7 +100,7 @@ app.get('/refresh_token', (req, res) => {
 });
 
 const spotifyRouter = require('./routes/spotify');
-app.use('/map', spotifyRouter);
+app.use('/spotify', spotifyRouter);
 
 function logger(req, res, next) {
     console.log(req.originalUrl);
