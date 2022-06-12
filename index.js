@@ -12,13 +12,13 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
-const stateKey = 'spotify_auth_state';
-
 app.use(logger);
 
 app.get('/', (req, res) => {
     res.send('root');
 });
+
+const stateKey = 'spotify_auth_state';
 
 app.get('/login', (req, res) => {
     const state = generateRandomString(16);
@@ -99,11 +99,8 @@ app.get('/refresh_token', (req, res) => {
         });
 });
 
-app.get('/map', (req, res) => {
-    console.log('ACCESS TOKEN: ' + req.query.access_token);
-    // res.serv('MAP');
-    res.render('map');
-});
+const spotifyRouter = require('./routes/spotify');
+app.use('/map', spotifyRouter);
 
 function logger(req, res, next) {
     console.log(req.originalUrl);
