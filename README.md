@@ -1,4 +1,4 @@
-# SpotifyListernerMapping
+# SpotifyListenerMapping
 
 Web application for mapping the artists' Spotify listener base.
 
