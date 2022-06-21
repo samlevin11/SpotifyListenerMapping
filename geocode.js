@@ -16,11 +16,21 @@ function geocodeCity(city) {
     return axios(config);
 }
 
-geocodeCity('Chicago, US').then((response) => {
-    if (response.status === 200) {
-        // console.log('response data', response.data);
-        console.log(response.data.features[0].center)
-    } else {
-        console.log('Geocode Error');
-    }
-});
+// geocodeCity('Chicago, US').then((response) => {
+//     if (response.status === 200) {
+//         // console.log('response data', response.data);
+//         console.log(response.data.features[0].center)
+//     } else {
+//         console.log('Geocode Error');
+//     }
+// });
+
+const cities = ['Dallas, US', 'London, UK', 'Sydney, AU', 'Berlin, DE', 'Mexico City, MX']
+let cityGeocodes = cities.map((city) => geocodeCity(city))
+Promise.all(cityGeocodes).then((results) => {
+    let geocodes = results.map((result) => {
+        return {query: result.data.query,
+        coords: result.data.features[0].center}
+    })
+    console.log(geocodes)
+})
