@@ -1,9 +1,10 @@
 require('dotenv').config();
 const axios = require('axios');
+const res = require('express/lib/response');
 
 mapbox_token = process.env.MAPBOX_TOKEN;
 
-async function geocodeCity(city) {
+function geocodeCity(city) {
     const cityFormatted = city.split(', ').join('%20');
 
     var config = {
@@ -12,15 +13,14 @@ async function geocodeCity(city) {
         headers: {},
     };
 
-    axios(config)
-        .then((response) => {
-            console.log('Geocode success')
-            console.log(JSON.stringify(response.data));
-            return response
-        })
-        .catch((error) => {
-            console.log('ERROR', error);
-        });
+    return axios(config);
 }
 
-geocodeCity('Chicago, US')
+geocodeCity('Chicago, US').then((response) => {
+    if (response.status === 200) {
+        // console.log('response data', response.data);
+        console.log(response.data.features[0].center)
+    } else {
+        console.log('Geocode Error');
+    }
+});
