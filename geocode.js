@@ -25,12 +25,12 @@ function geocodeCity(city) {
 //     }
 // });
 
-const cities = ['Dallas, US', 'London, UK', 'Sydney, AU', 'Berlin, DE', 'Mexico City, MX']
-let cityGeocodes = cities.map((city) => geocodeCity(city))
-Promise.all(cityGeocodes).then((results) => {
-    let geocodes = results.map((result) => {
-        return {query: result.data.query,
-        coords: result.data.features[0].center}
-    })
-    console.log(geocodes)
-})
+// const cities = ['Dallas, US', 'London, UK', 'Sydney, AU', 'Berlin, DE', 'Mexico City, MX']
+// let cityGeocodes = cities.map((city) => geocodeCity(city))
+// Promise.all(cityGeocodes).then((results) => {
+//     let geocodes = results.map((result) => {
+//         return {query: result.data.query,
+//         coords: result.data.features[0].center}
+//     })
+//     console.log(geocodes)
+// })
