@@ -11,11 +11,9 @@ async function start(url) {
     setTimeout(async () => {
         // // Click the artist info button based on class
         const artistInfoClass = process.env.ARTIST_INFO_CLASS;
-        let artistInfoButton = await page.$(artistInfoClass);
-        console.log('artistInfoButton', artistInfoButton);
-        await artistInfoButton.click();
+        await page.$eval(artistInfoClass, (element) => element.click());
 
-        await page.waitForSelector(process.env.OVERALL_STATS_CLASS);
+        // await page.waitForSelector(process.env.OVERALL_STATS_CLASS);
 
         // Object to store stats about an artist
         const artistStats = {};
