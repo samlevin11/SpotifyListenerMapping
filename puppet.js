@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 require('dotenv').config();
 
 async function start(url) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     await page.goto(url);
@@ -11,7 +11,11 @@ async function start(url) {
     setTimeout(async () => {
         // // Click the artist info button based on class
         const artistInfoClass = process.env.ARTIST_INFO_CLASS;
-        await page.click(artistInfoClass);
+        let artistInfoButton = await page.$(artistInfoClass);
+        console.log('artistInfoButton', artistInfoButton);
+        await artistInfoButton.click();
+
+        await page.waitForSelector(process.env.OVERALL_STATS_CLASS);
 
         // Object to store stats about an artist
         const artistStats = {};
@@ -25,7 +29,6 @@ async function start(url) {
                 return elements.map((el) => el.innerText);
             }
         );
-        // console.log('overallStats', overallStats);
 
         // For each overall stat
         overallStats.forEach((s) => {
