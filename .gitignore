@@ -1,3 +1,4 @@
 Ignore/*
 .env
-node_modules/*
+/node_modules/*
+/notes/
