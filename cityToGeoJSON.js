@@ -9,6 +9,8 @@ function cityToGeoJSON(properties, coordinates) {
     };
 }
 
+module.exports = cityToGeoJSON;
+
 // let coords = [151.21, -33.868];
 // let attribs = {
 //     city: 'Sydney, AU',
