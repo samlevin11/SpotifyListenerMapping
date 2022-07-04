@@ -84,3 +84,5 @@ async function scrape(url) {
 // scrape('url').then((response) => {
 //     console.log('response', response)
 // })
+
+module.exports = scrape

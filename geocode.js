@@ -1,6 +1,5 @@
 require('dotenv').config();
 const axios = require('axios');
-const res = require('express/lib/response');
 
 mapbox_token = process.env.MAPBOX_TOKEN;
 
@@ -15,6 +14,8 @@ function geocodeCity(city) {
 
     return axios(config);
 }
+
+module.exports = geocodeCity;
 
 // geocodeCity('Chicago, US').then((response) => {
 //     if (response.status === 200) {
