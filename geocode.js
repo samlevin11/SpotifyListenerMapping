@@ -16,7 +16,18 @@ async function geocodeCity(city) {
     return geocodeResult.data.features[0].center;
 }
 
-module.exports = geocodeCity;
+function cityToGeoJSON(properties, coordinates) {
+    return {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates,
+        },
+        properties,
+    };
+}
+
+module.exports = { geocodeCity, cityToGeoJSON };
 
 // const cities = ['Dallas, US', 'London, UK', 'Sydney, AU', 'Berlin, DE', 'Mexico City, MX']
 // let cityGeocodes = cities.map((city) => geocodeCity(city))

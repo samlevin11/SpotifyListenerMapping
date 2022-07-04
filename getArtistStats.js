@@ -1,6 +1,5 @@
 const scrape = require('./scrape');
 const geocode = require('./geocode');
-const cityToGeoJSON = require('./cityToGeoJSON');
 
 async function getArtistStats(artistUrl) {
     console.log(artistUrl);
@@ -29,11 +28,13 @@ async function getArtistStats(artistUrl) {
             // c.coordinates = await geocode(c.city);
             // return the new city object with coodinate attribute
 
-            let coordiantes = await geocode(c.city);
+            let coordiantes = await geocode.geocodeCity(c.city);
             // Return city formatted as GeoJSON
-            return cityToGeoJSON(c, coordiantes)
+            return geocode.cityToGeoJSON(c, coordiantes)
         })
     );
+
+    // console.log(artistStats)
 
     // Return artists stats with geocoded top cities
     // Each top city formatted as GeoJSON
