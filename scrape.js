@@ -1,5 +1,6 @@
-const { response } = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 require('dotenv').config();
 
 function getRandomInt(min, max) {
@@ -40,8 +41,8 @@ async function scrape(url) {
                 // Split description and number, save to variables
                 const [count, overallStat] = s.split('\n');
                 // Format these strings and add to artistStats object
-                artistStats[overallStat.replace(' ', '')] = parseInt(
-                    count.replace(',', '')
+                artistStats[overallStat.replaceAll(' ', '')] = parseInt(
+                    count.replaceAll(',', '')
                 );
             });
 
@@ -59,7 +60,9 @@ async function scrape(url) {
                 return {
                     city,
                     listeners: parseInt(
-                        listeners.replace(' listeners', '').replace(',', '')
+                        listeners
+                            .replaceAll(' listeners', '')
+                            .replaceAll(',', '')
                     ),
                 };
             });
@@ -85,4 +88,4 @@ async function scrape(url) {
 //     console.log('response', response)
 // })
 
-module.exports = scrape
+module.exports = scrape;
