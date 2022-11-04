@@ -32,8 +32,10 @@ passport.use(
         },
         function (accessToken, refreshToken, expires_in, profile, done) {
             console.log('accessToken', accessToken);
+            console.log('refreshToken', refreshToken);
+            console.log('expires_in', expires_in);
             console.log('profile', profile);
-            done(null, accessToken);
+            done(null, { accessToken, refreshToken, expires_in, profile });
         }
     )
 );
@@ -56,8 +58,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', (req, res) => {
-    console.log('USER', req.user);
-    res.send('app root');
+    console.log('USER INFO', req.user);
+    if (req.user) {
+        const displayName = req.user.profile.displayName;
+        res.send(`Welcome ${displayName}!!`);
+    } else {
+        res.send('app root');
+    }
 });
 
 app.get(
