@@ -1,17 +1,12 @@
 const express = require('express');
-const app = express();
 const session = require('express-session');
-const port = 3000;
-
-require('dotenv').config();
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const CALLBACK_URI = process.env.CALLBACK_URI;
-
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 
-app.use(logger);
+require('dotenv').config();
+
+const port = 3000;
+var authCallbackPath = '/auth/spotify/callback';
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -28,29 +23,40 @@ passport.deserializeUser(function (obj, done) {
     done(null, obj);
 });
 
-app.use(
-    session({ secret: 'keyboard cat', resave: true, saveUninitialized: true })
-);
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
-app.use(passport.initialize());
-app.use(passport.session());
-
 passport.use(
     new SpotifyStrategy(
         {
-            clientID: CLIENT_ID,
-            clientSecret: CLIENT_SECRET,
-            callbackURL: CALLBACK_URI,
+            clientID: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            callbackURL: 'http://localhost:' + port + authCallbackPath,
         },
         function (accessToken, refreshToken, expires_in, profile, done) {
             console.log('accessToken', accessToken);
+            console.log('profile', profile);
             done(null, accessToken);
         }
     )
 );
 
+const app = express();
+
+app.use(pathLogger);
+
+app.use(
+    session({
+        secret: '46^ubGeCF!$bpFxDbq9A',
+        resave: true,
+        saveUninitialized: true,
+    })
+);
+
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get('/', (req, res) => {
+    console.log('USER', req.user);
     res.send('app root');
 });
 
@@ -71,11 +77,16 @@ app.get(
     }
 );
 
-app.get('/loggedin', (req, res) => {
-    res.send('LOGGED IN.');
+app.get('/logout', function (req, res, next) {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/');
+    });
 });
 
-function logger(req, res, next) {
+function pathLogger(req, res, next) {
     console.log(req.originalUrl);
     next();
 }
