@@ -1,44 +1,12 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const SpotifyStrategy = require('passport-spotify').Strategy;
+const initializePassport = require('./passport-config');
 
 require('dotenv').config();
+port = process.env.PORT;
 
-const port = 3000;
-var authCallbackPath = '/auth/spotify/callback';
-
-// Passport session setup.
-//   To support persistent login sessions, Passport needs to be able to
-//   serialize users into and deserialize users out of the session. Typically,
-//   this will be as simple as storing the user ID when serializing, and finding
-//   the user by ID when deserializing. However, since this example does not
-//   have a database of user records, the complete spotify profile is serialized
-//   and deserialized.
-passport.serializeUser(function (user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function (obj, done) {
-    done(null, obj);
-});
-
-passport.use(
-    new SpotifyStrategy(
-        {
-            clientID: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_SECRET,
-            callbackURL: 'http://localhost:' + port + authCallbackPath,
-        },
-        function (accessToken, refreshToken, expires_in, profile, done) {
-            console.log('accessToken', accessToken);
-            console.log('refreshToken', refreshToken);
-            console.log('expires_in', expires_in);
-            console.log('profile', profile);
-            done(null, { accessToken, refreshToken, expires_in, profile });
-        }
-    )
-);
+initializePassport(passport);
 
 const app = express();
 
