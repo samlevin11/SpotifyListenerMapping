@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const session = require('express-session');
 const passport = require('passport');
 const initializePassport = require('./passport-config');
@@ -8,7 +9,7 @@ port = process.env.PORT;
 
 initializePassport(passport);
 
-const app = express();
+app.set('view-engine', 'ejs');
 
 app.use(pathLogger);
 
@@ -26,13 +27,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', (req, res) => {
-    console.log('USER INFO', req.user);
-    if (req.user) {
-        const displayName = req.user.profile.displayName;
-        res.send(`Welcome ${displayName}!!`);
-    } else {
-        res.send('app root');
-    }
+    res.send('app root');
+});
+
+app.get('/home', (req, res) => {
+    console.log('USER', req.user);
+    const displayName = req.user.profile.displayName;
+    res.render('home.ejs', { displayName });
 });
 
 app.get(
@@ -48,18 +49,40 @@ app.get(
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     function (req, res) {
         // Successful authentication, redirect home.
-        res.redirect('/');
+        res.redirect('/home');
     }
 );
 
-app.get('/logout', function (req, res, next) {
+app.get('/login', (req, res) => {
+    res.render('login.ejs');
+});
+
+app.get('/logout', (req, res, next) => {
     req.logout(function (err) {
         if (err) {
             return next(err);
         }
-        res.redirect('/');
+        res.redirect('/login');
     });
 });
+
+// function checkNotAuthenticated(req, res, next) {
+//     // if (req.isAuthenticated()) {
+//     //     return next();
+//     // } else
+//     console.log('isAuthenticated', req.isAuthenticated())
+//     if (req.isAuthenticated()) {
+//         res.redirect('/auth/spotify');
+//     }
+//     return next();
+// }
+
+// function checkNotAuthenticated(req, res, next) {
+//     if (req.isAuthenticated()) {
+//         return res.redirect('/');
+//     }
+//     next();
+// }
 
 function pathLogger(req, res, next) {
     console.log(req.originalUrl);
