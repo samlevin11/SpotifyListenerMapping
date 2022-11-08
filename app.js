@@ -15,7 +15,7 @@ app.use(pathLogger);
 
 app.use(
     session({
-        secret: '46^ubGeCF!$bpFxDbq9A',
+        secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
     })
@@ -25,6 +25,9 @@ app.use(
 // persistent login sessions (recommended).
 app.use(passport.initialize());
 app.use(passport.session());
+
+const spotifyRouter = require('./routes/spotify');
+app.use('/spotify', spotifyRouter);
 
 app.get('/', (req, res) => {
     res.send('app root');
@@ -45,7 +48,7 @@ app.get(
 );
 
 app.get(
-    '/auth/spotify/callback',
+    process.env.AUTH_CALLBACK_PATH,
     passport.authenticate('spotify', { failureRedirect: '/login' }),
     function (req, res) {
         // Successful authentication, redirect home.
@@ -65,24 +68,6 @@ app.get('/logout', (req, res, next) => {
         res.redirect('/login');
     });
 });
-
-// function checkNotAuthenticated(req, res, next) {
-//     // if (req.isAuthenticated()) {
-//     //     return next();
-//     // } else
-//     console.log('isAuthenticated', req.isAuthenticated())
-//     if (req.isAuthenticated()) {
-//         res.redirect('/auth/spotify');
-//     }
-//     return next();
-// }
-
-// function checkNotAuthenticated(req, res, next) {
-//     if (req.isAuthenticated()) {
-//         return res.redirect('/');
-//     }
-//     next();
-// }
 
 function pathLogger(req, res, next) {
     console.log(req.originalUrl);
