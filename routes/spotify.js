@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-router.get('/', (req, res) => {
+router.get('/getfollowed', (req, res) => {
     // res.render('map');
     let accessToken = req.user.accessToken
     console.log('ACCESS TOKEN: ', accessToken);
-    getFollowedArtists(accessToken).then((response) => {
-        console.log(response.length);
-        res.json(response);
+    getFollowedArtists(accessToken).then((followedArtists) => {
+        console.log(followedArtists.length);
+        // res.json(followedArtists);
+        res.render('getfollowed.ejs', { followedArtists })
     });
 });
 

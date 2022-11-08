@@ -1,0 +1,7 @@
+<h1>Followed artists</h1>
+<% followedArtists.forEach((artist) => { %>
+    <a href="<%=artist.external_urls.spotify %>" >
+    <%= artist.name %>
+    </a>
+    <br>
+<%}); %>
