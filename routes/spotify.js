@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const scrape = require('../scrape');
 
 router.get('/getfollowed', (req, res) => {
     // res.render('map');
-    let accessToken = req.user.accessToken
+    let accessToken = req.user.accessToken;
     console.log('ACCESS TOKEN: ', accessToken);
     getFollowedArtists(accessToken).then((followedArtists) => {
         console.log(followedArtists.length);
+        // console.log(followedArtists[0]);
         // res.json(followedArtists);
-        res.render('getfollowed.ejs', { followedArtists })
+        res.render('getfollowed.ejs', { followedArtists });
     });
 });
 
@@ -62,5 +64,14 @@ function getFollowedArtists(access_token) {
         });
     }
 }
+
+router.get('/findlisteners', (req, res) => {
+    console.log(req.query);
+    res.send('FIND LISTENERS');
+    let artistUrl = 'https://open.spotify.com/artist/' + req.query.artist;
+    scrape(artistUrl).then((response) => {
+        console.log('response', response);
+    });
+});
 
 module.exports = router;
