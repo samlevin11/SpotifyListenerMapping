@@ -30,7 +30,7 @@ async function getArtistStats(artistUrl) {
 
             let coordiantes = await geocode.geocodeCity(c.city);
             // Return city formatted as GeoJSON
-            return geocode.cityToGeoJSON(c, coordiantes)
+            return geocode.cityToGeoJSON(c, coordiantes);
         })
     );
 
@@ -38,5 +38,7 @@ async function getArtistStats(artistUrl) {
 
     // Return artists stats with geocoded top cities
     // Each top city formatted as GeoJSON
-    return artistStats
+    return artistStats;
 }
+
+module.exports = getArtistStats;

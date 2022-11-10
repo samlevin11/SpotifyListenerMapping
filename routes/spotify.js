@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const scrape = require('../scrape');
+const getArtistStats = require('../getArtistStats');
 
 router.get('/getfollowed', (req, res) => {
     // res.render('map');
@@ -65,12 +66,12 @@ function getFollowedArtists(access_token) {
     }
 }
 
-router.get('/findlisteners', (req, res) => {
+router.get('/mapartist', (req, res) => {
     console.log(req.query);
-    res.send('FIND LISTENERS');
     let artistUrl = 'https://open.spotify.com/artist/' + req.query.artist;
-    scrape(artistUrl).then((response) => {
-        console.log('response', response);
+    getArtistStats(artistUrl).then((artistStats) => {
+        console.log(artistStats);
+        res.json(artistStats);
     });
 });
 
