@@ -25,12 +25,26 @@
     <body>
         <div id="map"></div>
         <script>
+            console.log('MAP CONSOLE LOG');
+
             var map = L.map('map').setView([43, -107], 5);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap',
             }).addTo(map);
+
+            const topCities = JSON.parse('<%- topCities %>');
+            // const topCities = '<%- topCities %>';
+
+            // const topCities = JSON.parse(
+            //     '{ "type": "Feature", "geometry": { "type": "Point", "coordinates": [-0.12764739999999997, 51.507321899999994] }, "properties": { "city": "London, GB", "listeners": 1126607 } }'
+            // );
+            // const topCities =
+            //     JSON.parse('{ "type": "Point", "coordinates": [-0.12764739999999997, 51.507321899999994] }');
+            console.log(topCities);
+
+            L.geoJSON(topCities).addTo(map);
         </script>
     </body>
 </html>

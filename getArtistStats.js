@@ -21,18 +21,22 @@ async function getArtistStats(artistUrl) {
     // Geocode top cities
     // Add coordiantes as an attribute in each city object
     // Wait for all five cities to finish being geocoded before reassigining the topCities property
-    artistStats.topCities = await Promise.all(
-        artistStats.topCities.map(async (c) => {
-            // Geocode via Mapbox geocoding service
-            // Assign a new coordinates property to the city object with the geocoded long, lat
-            // c.coordinates = await geocode(c.city);
-            // return the new city object with coodinate attribute
+    // Add top cities to a feature collection
+    artistStats.topCities = {
+        type: 'FeatureCollection',
+        features: await Promise.all(
+            artistStats.topCities.map(async (c) => {
+                // Geocode via Mapbox geocoding service
+                // Assign a new coordinates property to the city object with the geocoded long, lat
+                // c.coordinates = await geocode(c.city);
+                // return the new city object with coodinate attribute
 
-            let coordiantes = await geocode.geocodeCity(c.city);
-            // Return city formatted as GeoJSON
-            return geocode.cityToGeoJSON(c, coordiantes);
-        })
-    );
+                let coordiantes = await geocode.geocodeCity(c.city);
+                // Return city formatted as GeoJSON
+                return geocode.cityToGeoJSON(c, coordiantes);
+            })
+        ),
+    };
 
     // console.log(artistStats)
 
