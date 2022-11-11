@@ -34,15 +34,8 @@
                 attribution: '© OpenStreetMap',
             }).addTo(map);
 
-            const topCities = JSON.parse('<%- topCities %>');
-            // const topCities = '<%- topCities %>';
-
-            // const topCities = JSON.parse(
-            //     '{ "type": "Feature", "geometry": { "type": "Point", "coordinates": [-0.12764739999999997, 51.507321899999994] }, "properties": { "city": "London, GB", "listeners": 1126607 } }'
-            // );
-            // const topCities =
-            //     JSON.parse('{ "type": "Point", "coordinates": [-0.12764739999999997, 51.507321899999994] }');
-            console.log(topCities);
+            const topCities = <%- JSON.stringify( topCities ) %>;
+            console.log('TOP CITIES', topCities);
 
             L.geoJSON(topCities).addTo(map);
         </script>
