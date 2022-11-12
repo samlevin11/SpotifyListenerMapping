@@ -34,10 +34,18 @@
                 attribution: '© OpenStreetMap',
             }).addTo(map);
 
+            // Configure popups for each feature
+            // Show the city name and number of listeners (add thousandths separator)
+            function onEachFeature(feature, layer) {
+                if (feature.properties && feature.properties.city && feature.properties.listeners) {
+                    layer.bindPopup('<h3>' + feature.properties.city + '<br>' + feature.properties.listeners.toLocaleString() + ' Listeners</h3>');
+                }
+            }
+
             const topCities = <%- JSON.stringify( topCities ) %>;
             console.log('TOP CITIES', topCities);
 
-            L.geoJSON(topCities).addTo(map);
+            L.geoJSON(topCities, { onEachFeature }).addTo(map);
         </script>
     </body>
 </html>
