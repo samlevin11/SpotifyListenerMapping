@@ -30,72 +30,64 @@
         <div id="map"></div>
 
         <script>
-var map = L.map('map').setView([0, 0], 3);
+            console.log('MAP CONSOLE LOG');
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap',
-}).addTo(map);
+            var map = L.map('map').setView([0, 0], 3);
 
-// Configure popups for each feature
-// Show the city name and number of listeners (add thousandths separator)
-function onEachFeature(feature, layer) {
-    if (
-        feature.properties &&
-        feature.properties.city &&
-        feature.properties.listeners
-    ) {
-        layer.bindPopup(
-            '<h3>' +
-                feature.properties.city +
-                '<br>' +
-                feature.properties.listeners.toLocaleString() +
-                ' Listeners</h3>'
-        );
-    }
-}
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap',
+            }).addTo(map);
 
-const topCities = <%- JSON.stringify( topCities ) %>;
-console.log('TOP CITIES', topCities);
+            // Configure popups for each feature
+            // Show the city name and number of listeners (add thousandths separator)
+            function onEachFeature(feature, layer) {
+                if (feature.properties && feature.properties.city && feature.properties.listeners) {
+                    layer.bindPopup('<h3>' + feature.properties.city + '<br>' + feature.properties.listeners.toLocaleString() + ' Listeners</h3>');
+                }
+            }
 
-L.geoJSON(topCities, { onEachFeature }).addTo(map);
+            const topCities = <%- JSON.stringify( topCities ) %>;
+            console.log('TOP CITIES', topCities);
 
-let heatmapData = {
-    data: topCities.features.map((city) => {
-        return {
-            lat: city.geometry.coordinates[1],
-            lng: city.geometry.coordinates[0],
-            count: city.properties.listeners,
-        };
-    }),
-};
+            L.geoJSON(topCities, { onEachFeature }).addTo(map);
 
-let maxListeners = Math.max(...heatmapData.data.map((d) => d.count));
-heatmapData.max = maxListeners;
+            let heatmapData = {
+                data: topCities.features.map((city) => {
 
-console.log('topCitiesHeatFormat', heatmapData);
+                return { lat: city.geometry.coordinates[1],
+                         lng: city.geometry.coordinates[0],
+                         count: city.properties.listeners }
+            })
+        }
 
-var cfg = {
-    // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-    // if scaleRadius is false it will be the constant radius used in pixels
-    radius: 6,
-    maxOpacity: 0.8,
-    // scales the radius based on map zoom
-    scaleRadius: true,
-    // if set to false the heatmap uses the global maximum for colorization
-    // if activated: uses the data maximum within the current map boundaries
-    //   (there will always be a red spot with useLocalExtremas true)
-    useLocalExtrema: true,
-    // which field name in your data represents the latitude - default "lat"
-    latField: 'lat',
-    // which field name in your data represents the longitude - default "lng"
-    lngField: 'lng',
-    // which field name in your data represents the data value - default "value"
-    valueField: 'count',
-};
+        let maxListeners = Math.max(...heatmapData.data.map(d => d.count))
+        heatmapData.max = maxListeners
 
-let heatmapLayer = new HeatmapOverlay(cfg).addTo(map);
-heatmapLayer.setData(heatmapData);
+
+            console.log('topCitiesHeatFormat', heatmapData)
+
+            var cfg = {
+            // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+            // if scaleRadius is false it will be the constant radius used in pixels
+            "radius": 6,
+            "maxOpacity": .8,
+            // scales the radius based on map zoom
+            "scaleRadius": true,
+            // if set to false the heatmap uses the global maximum for colorization
+            // if activated: uses the data maximum within the current map boundaries
+            //   (there will always be a red spot with useLocalExtremas true)
+            "useLocalExtrema": true,
+            // which field name in your data represents the latitude - default "lat"
+            latField: 'lat',
+            // which field name in your data represents the longitude - default "lng"
+            lngField: 'lng',
+            // which field name in your data represents the data value - default "value"
+            valueField: 'count'
+            };
+
+            let heatmapLayer = new HeatmapOverlay(cfg).addTo(map);
+            heatmapLayer.setData(heatmapData);
 
         </script>
     </body>
