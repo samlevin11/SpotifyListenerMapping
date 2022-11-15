@@ -13,6 +13,8 @@ app.set('view-engine', 'ejs');
 
 app.use(pathLogger);
 
+app.use("/public", express.static('public'))
+
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
